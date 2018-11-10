@@ -1,9 +1,20 @@
-import pdb
 import string
 import re
 import copy
 import random as rn
+import argparse
 
+import pdb
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--file", help="the file containing the sentences")
+    args = parser.parse_args()
+    
+    if not args.file:
+        parser.error("Error: file required as an argument (-f or --file).")
+        
+    return args
 
 def purify(sentences):
     """ Gets rid of all punctuation signs. """
@@ -162,10 +173,12 @@ def reformate_sentence(sentence):
     return sentence
 
 def main():
+    args = parse_args()
+
     initial_sentences = []
 
     # Load the sentences
-    with open('data.txt', 'r', encoding='utf-8') as input_file:
+    with open(args.file, 'r', encoding='utf-8') as input_file:
         initial_sentences = input_file.read().split('\n')
 
     word_proba = []
