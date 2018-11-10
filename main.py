@@ -7,13 +7,14 @@ import argparse
 import pdb
 
 def parse_args():
+    """ Arguments parser. """
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", help="the file containing the sentences")
     args = parser.parse_args()
     
     if not args.file:
         parser.error("Error: file required as an argument (-f or --file).")
-        
+
     return args
 
 def purify(sentences):
@@ -37,12 +38,12 @@ def beautify(sentences):
     translator = str.maketrans({key: " {0} ".format(key) for key in ',\''})
 
     if type(sentences) == str:
-        return re.sub( '\s+', ' ', sentences.translate(translator)).strip()
+        return re.sub( r'\s+', ' ', sentences.translate(translator)).strip()
 
     elif type(sentences) == list:
         new_lst = []
         for sentence in sentences:
-            new_lst.append(re.sub( '\s+', ' ', sentence.translate(translator)).strip())
+            new_lst.append(re.sub( r'\s+', ' ', sentence.translate(translator)).strip())
         return new_lst
 
 
@@ -93,7 +94,7 @@ def normalise_word_matrix(word_matrix):
     for k, v in new_matrix.items():
         total_sum = sum(v.values())
 
-        for kk, vv in v.items():
+        for kk in v.keys():
             new_matrix[k][kk] = new_matrix[k][kk] / total_sum
 
     return new_matrix
@@ -109,7 +110,7 @@ def cumulative_probs(lst):
     lst = sorted(lst ,key=lambda x: x[1], reverse=False)
 
     # Cumulative probs
-    for i, val in enumerate(lst):
+    for i, _ in enumerate(lst):
         if i != 0:
             lst[i][1] += lst[i-1][1]
 
