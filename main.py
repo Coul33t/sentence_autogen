@@ -167,8 +167,10 @@ def generate_sentence(wpm, wpm_normalised, max_word_length=50):
     new_sentence += first_choice + ' '
     last_word = first_choice
 
+    iteration = 0
+
     # TODO: if X words is reached, go for the next with END
-    for _ in range(max_word_length):
+    while iteration < max_word_length or 'END' not in next_word_proba.keys():
         next_word_proba = wpm_normalised[last_word]
         next_word_proba_lst = [[k, v] for k, v in next_word_proba.items() if k != 'BEGIN']
         next_word_proba_lst = cumulative_probs(next_word_proba_lst)
@@ -180,6 +182,8 @@ def generate_sentence(wpm, wpm_normalised, max_word_length=50):
 
         new_sentence += choice + ' '
         last_word = choice
+
+        iteration += 1
 
     return new_sentence
 
@@ -213,8 +217,7 @@ def main():
 
     # Generate sentences
     for _ in range(10):
-        print(reformate_sentence(generate_sentence(word_prob_matrix, word_prob_matrix_normalised)))
-        print('\n')
+        print(reformate_sentence(generate_sentence(word_prob_matrix, word_prob_matrix_normalised, max_word_length=50)))
 
 
 
