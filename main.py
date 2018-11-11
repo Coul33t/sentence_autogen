@@ -41,7 +41,7 @@ def beautify(sentences):
     """ Reformats sentences by adding a space before and after punctuation
         (to treat them as regular sentence parts). """
 
-    translator = str.maketrans({key: " {0} ".format(key) for key in ',\''})
+    translator = str.maketrans({key: " {0} ".format(key) for key in ','})
 
     if isinstance(sentences, str):
         return re.sub(r'\s+', ' ', sentences.translate(translator)).strip()
@@ -147,7 +147,7 @@ def return_selected(random_choice, lst):
     # it.
     return lst[0][0]
 
-def generate_sentence(wpm, wpm_normalised):
+def generate_sentence(wpm, wpm_normalised, max_word_length=50):
     """ Generates a sentence from a list of word probabilities. """
 
     new_sentence = ''
@@ -168,7 +168,7 @@ def generate_sentence(wpm, wpm_normalised):
     last_word = first_choice
 
     # TODO: if X words is reached, go for the next with END
-    for _ in range(30):
+    for _ in range(max_word_length):
         next_word_proba = wpm_normalised[last_word]
         next_word_proba_lst = [[k, v] for k, v in next_word_proba.items() if k != 'BEGIN']
         next_word_proba_lst = cumulative_probs(next_word_proba_lst)
