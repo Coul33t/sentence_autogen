@@ -216,7 +216,7 @@ def main():
     word_prob_matrix_normalised = normalise_word_matrix(word_prob_matrix)
 
     # Generate sentences
-    for _ in range(10):
+    for _ in range(30):
         print(reformate_sentence(generate_sentence(word_prob_matrix, word_prob_matrix_normalised, max_word_length=50)))
 
 
