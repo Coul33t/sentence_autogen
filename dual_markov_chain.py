@@ -113,7 +113,7 @@ def examples_to_sentences(initial_sentences, number_to_generate=30, max_word_len
     # Compute the number of occurence of each words
     word_prob_matrix = compute_word_occurence(trimmed, word_order)
 
-    # Transforms occurences into cumulative proabilities
+    # Transforms occurences into cumulative probabilities
     word_prob_matrix_normalised = normalise_word_matrix(word_prob_matrix)
 
     generated_sentences = [reformate_sentence(generate_sentence(word_prob_matrix, word_prob_matrix_normalised, max_word_length=max_word_length)) for x in range(number_to_generate)]
