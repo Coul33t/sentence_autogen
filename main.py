@@ -18,6 +18,9 @@ def parse_args():
     if not args.file:
         parser.error("Error: file required as an argument (-f or --file).")
 
+    if not 0 < int(args.markov) < 3:
+        parser.error("Error: markov value must be 1 or 2.")
+
     return args
 
 
