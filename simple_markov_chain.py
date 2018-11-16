@@ -31,11 +31,13 @@ def compute_word_occurence(sentences, word_order):
                     matrix[word]['BEGIN'] += 1
                 else:
                     matrix[word]['BEGIN'] = 1
+
             if i == len(splitted) - 1:
                 if 'END' in matrix[word]:
                     matrix[word]['END'] += 1
                 else:
                     matrix[word]['END'] = 1
+
             else:
                 if splitted[i+1] in matrix[word]:
                     matrix[word][splitted[i+1]] += 1
@@ -52,16 +54,18 @@ def generate_sentence(wpm, wpm_normalised, max_word_length=50):
     first_word = []
     last_word = ''
 
+    # Get every words that can start a sentence
     for word, next_word_proba in wpm.items():
         if 'BEGIN' in next_word_proba:
             first_word.append([word, wpm[word]['BEGIN']])
 
     first_word = cumulative_probs(first_word)
 
+    # Choose a random one
     random_choice = rn.random()
-
     first_choice = return_selected(random_choice, first_word)
 
+    # We got our first word. Yay!
     new_sentence += first_choice + ' '
     last_word = first_choice
 
@@ -69,15 +73,19 @@ def generate_sentence(wpm, wpm_normalised, max_word_length=50):
 
     # TODO: if X words is reached, go for the next with END
     while iteration < max_word_length or 'END' not in next_word_proba.keys():
+        # Get the probable words following the last one
         next_word_proba = wpm_normalised[last_word]
         next_word_proba_lst = [[k, v] for k, v in next_word_proba.items() if k != 'BEGIN']
         next_word_proba_lst = cumulative_probs(next_word_proba_lst)
+        # Choose a random one
         random_choice = rn.random()
         choice = return_selected(random_choice, next_word_proba_lst)
 
+        # If we chose that this is the end of the sentence, then stop 
         if choice == 'END':
             break
 
+        # Else, continue until we have reached the maximum number of words allowed
         new_sentence += choice + ' '
         last_word = choice
 

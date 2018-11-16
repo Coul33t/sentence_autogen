@@ -28,9 +28,10 @@ def main_single(file):
     with open(file, 'r', encoding='utf-8') as input_file:
         initial_sentences = input_file.read().split('\n')
 
-    generated_sentences = simple_markov_chain.examples_to_sentences(initial_sentences, 30)
-
     # Generate sentences
+    generated_sentences = simple_markov_chain.examples_to_sentences(initial_sentences, 30)
+    
+    # Print them
     for sentence in generated_sentences:
         print(reformate_sentence(sentence))
 
@@ -42,8 +43,10 @@ def main_dual(file):
     with open(file, 'r', encoding='utf-8') as input_file:
         initial_sentences = input_file.read().split('\n')
 
+    # Generate sentences
     generated_sentences = dual_markov_chain.examples_to_sentences(initial_sentences, 30)
 
+    # Print them
     for sentence in generated_sentences:
         print(reformate_sentence(sentence))
 
