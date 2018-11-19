@@ -84,10 +84,7 @@ def return_selected(random_choice, lst):
                 return word[0]
 
     # Sometimes, lst is empty
-    try:
-        return lst[0][0]
-    except IndexError:
-        return []
+    return lst[0][0]
 
 
 def reformate_sentence(sentence):

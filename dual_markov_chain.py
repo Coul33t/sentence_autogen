@@ -72,7 +72,6 @@ def generate_sentence(wpm, wpm_normalised, max_word_length=50):
 
     iteration = 0
 
-
     # TODO: if X words is reached, go for the next with END
     while iteration < max_word_length or 'END' not in next_word_proba.keys():
         # Get the probable words following the last one
