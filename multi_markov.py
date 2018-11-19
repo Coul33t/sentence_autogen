@@ -85,10 +85,15 @@ def generate_sentence(wpm, wpm_normalised, min_word_length=0, max_word_length=50
     iteration = 0
 
 
-    # TODO: if X words is reached, go for the next with END
     while iteration <= max_word_length or 'END' not in next_word_proba.keys():
+        
         # Get the probable words following the last one
-        next_word_proba = wpm_normalised[last_word]
+        # BUG: shouldn't happen (but it did)
+        try:
+            next_word_proba = wpm_normalised[last_word]
+        except KeyError:
+            break
+
         next_word_proba_lst = [[k, v] for k, v in next_word_proba.items() if k != 'BEGIN']
         next_word_proba_lst = cumulative_probs(next_word_proba_lst)
 
