@@ -1,7 +1,7 @@
 import argparse
 
 import simple_markov_chain
-import dual_markov_chain
+import multi_markov
 from tools import reformate_sentence
 import pdb
 
@@ -18,8 +18,8 @@ def parse_args():
     if not args.file:
         parser.error("Error: file required as an argument (-f or --file).")
 
-    if not 0 < int(args.markov) < 3:
-        parser.error("Error: markov value must be 1 or 2.")
+    if not 0 < int(args.markov):
+        parser.error("Error: markov value must be > 0.")
 
     return args
 
@@ -39,7 +39,7 @@ def main_single(file):
         print(reformate_sentence(sentence))
 
 
-def main_dual(file):
+def main_multi(file, markov):
     initial_sentences = []
 
     # Load the sentences
@@ -47,17 +47,13 @@ def main_dual(file):
         initial_sentences = input_file.read().split('\n')
 
     # Generate sentences
-    generated_sentences = dual_markov_chain.examples_to_sentences(initial_sentences, 30)
+    generated_sentences = multi_markov.examples_to_sentences(initial_sentences, markov, min_word_length=15, max_word_length=150)
 
     # Print them
     for sentence in generated_sentences:
         print(reformate_sentence(sentence))
 
-
 if __name__ == '__main__':
     args = parse_args()
 
-    if int(args.markov) == 1:
-        main_single(args.file)
-    elif int(args.markov) == 2:
-        main_dual(args.file)
+    main_multi(args.file, int(args.markov))
