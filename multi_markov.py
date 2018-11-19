@@ -84,12 +84,17 @@ def generate_sentence(wpm, wpm_normalised, min_word_length=0, max_word_length=50
 
     iteration = 0
 
-
     while iteration <= max_word_length or 'END' not in next_word_proba.keys():
         
-        # Get the probable words following the last one
+        #BUG: Sometimes, the algorithm get stuck in an infinite loop between 2 words
+        if iteration > max_word_length * 2:
+            print(f'WARNING: endless loop between two words, invalid sentence (ditched)')
+            return ''
+            
+
         # BUG: shouldn't happen (but it did)
         try:
+            # Get the probable words following the last one
             next_word_proba = wpm_normalised[last_word]
         except KeyError:
             break
@@ -159,4 +164,5 @@ def examples_to_sentences(initial_sentences, markov=2, number_to_generate=30, mi
         generated_sentences.append(reformate_sentence(generate_sentence(word_prob_matrix, word_prob_matrix_normalised, 
                                                                         min_word_length=min_word_length, max_word_length=max_word_length)))
         print(f'sentence generated.')
+    
     return generated_sentences
