@@ -1,8 +1,7 @@
 import argparse
 
-import simple_markov_chain
-import multi_markov
-from tools import reformate_sentence
+from markold import multi_markov
+from markold.tools import reformate_sentence
 import pdb
 
 
@@ -25,21 +24,6 @@ def parse_args():
         parser.error("Error: markov value must be > 0.")
 
     return args
-
-
-def main_single(file):
-    initial_sentences = []
-
-    # Load the sentences
-    with open(file, 'r', encoding='utf-8') as input_file:
-        initial_sentences = input_file.read().split('\n')
-
-    # Generate sentences
-    generated_sentences = simple_markov_chain.examples_to_sentences(initial_sentences, 30)
-    
-    # Print them
-    for sentence in generated_sentences:
-        print(reformate_sentence(sentence))
 
 
 def main_multi(args):

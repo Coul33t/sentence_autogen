@@ -1,5 +1,5 @@
 import pdb
-from tools import (cumulative_probs, return_selected, beautify, normalise_word_matrix, reformate_sentence)
+from .tools import (cumulative_probs, return_selected, beautify, normalise_word_matrix, reformate_sentence)
 import random as rn
 
 def get_key(words, i, n):
