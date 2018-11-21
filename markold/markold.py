@@ -8,6 +8,8 @@ class Markold:
         self.saved_matrixes = {}
 
     def import_sentences(self, file):
+        self.sentences = []
+        self.saved_matrixes = {}
         with open(file, 'r', encoding='utf-8') as input_file:
             self.sentences = input_file.read().split('\n')
 
@@ -254,6 +256,7 @@ class Markold:
 
     def generate_multiple_sentences(self, markov, n, min_word_length=0, max_word_length=50, to_output=None, to_print=None):
         generated_sentences = []
+
         for x in range(n):
             print(f'Generating sentence {x}...', end=' ')
             generated_sentences.append(self.reformate_sentence(self.generate_sentence(markov, min_word_length=min_word_length, 
