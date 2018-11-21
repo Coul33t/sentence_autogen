@@ -62,6 +62,9 @@ class Ui_MainWindow(object):
         self.spinbox_max_words = QtWidgets.QSpinBox(self.centralwidget)
         self.spinbox_max_words.setGeometry(QtCore.QRect(590, 120, 42, 22))
         self.spinbox_max_words.setObjectName("spinbox_max_words")
+        self.pushbutton_model = QtWidgets.QPushButton(self.centralwidget)
+        self.pushbutton_model.setGeometry(QtCore.QRect(120, 160, 93, 28))
+        self.pushbutton_model.setObjectName("pushbutton_model")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
@@ -85,4 +88,5 @@ class Ui_MainWindow(object):
         self.label_sentence_number.setText(_translate("MainWindow", "Number of sentences to generate"))
         self.label_min_words.setText(_translate("MainWindow", "Minimum number of words"))
         self.label_max_words.setText(_translate("MainWindow", "Maximum number of words"))
+        self.pushbutton_model.setText(_translate("MainWindow", "Prepare model"))
 

@@ -8,12 +8,14 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from markold import multi_markov
-from markold.tools import reformate_sentence
+from markold.markold import Markold
 
 import pdb
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.markold = Markold()
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -67,6 +69,9 @@ class Ui_MainWindow(object):
         self.spinbox_max_words = QtWidgets.QSpinBox(self.centralwidget)
         self.spinbox_max_words.setGeometry(QtCore.QRect(590, 120, 42, 22))
         self.spinbox_max_words.setObjectName("spinbox_max_words")
+        self.pushbutton_model = QtWidgets.QPushButton(self.centralwidget)
+        self.pushbutton_model.setGeometry(QtCore.QRect(120, 160, 93, 28))
+        self.pushbutton_model.setObjectName("pushbutton_model")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
@@ -92,6 +97,7 @@ class Ui_MainWindow(object):
         self.label_sentence_number.setText(_translate("MainWindow", "Number of sentences to generate"))
         self.label_min_words.setText(_translate("MainWindow", "Minimum number of words"))
         self.label_max_words.setText(_translate("MainWindow", "Maximum number of words"))
+        self.pushbutton_model.setText(_translate("MainWindow", "Prepare model"))
 
     def link(self):
         self.pushbutton_input_file.clicked.connect(self.select_file)
@@ -101,21 +107,22 @@ class Ui_MainWindow(object):
         self.spinbox_min_words.setValue(10)
         self.spinbox_min_words.setRange(1,9999)
         self.spinbox_max_words.setValue(100)
+        self.pushbutton_model.clicked.connect(self.prepare)
         self.pushbutton_one_sentence.clicked.connect(self.generate_one)
         self.pushbutton_full_sentences.clicked.connect(self.generate_all)
 
     def select_file(self):
         self.lineedit_input_file.setText(QtWidgets.QFileDialog.getOpenFileName()[0])
 
-    def generate_one(self):
-        initial_sentences = []
-        # Load the sentences
-        with open(self.lineedit_input_file.text(), 'r', encoding='utf-8') as input_file:
-            initial_sentences = input_file.read().split('\n')
+    def prepare(self):
+        if self.lineedit_input_file.text():
+            self.markold.import_sentences(self.lineedit_input_file.text())
+        
+            if self.spinbox_markov.value():
+                self.markold.compute_word_matrix(self.spinbox_markov.value())
 
-        if not initial_sentences:
-            print('WARNING: no sentences retrieved from the input file')
-            return
+
+    def generate_one(self):
 
         markov = self.spinbox_markov.value()
         min_word_length = self.spinbox_min_words.value()
@@ -125,20 +132,12 @@ class Ui_MainWindow(object):
             print('WARNING: max word length is inferior to min word length')
             return
 
-        sentence = multi_markov.examples_to_sentences(initial_sentences, markov=markov, number_to_generate=1,
-                                                      min_word_length=min_word_length, max_word_length=max_word_length)
+        sentence = self.markold.generate_sentence(markov=markov, min_word_length=min_word_length, max_word_length=max_word_length)
                                         
-        self.textbrowser_one_sentence.setText(sentence[0])
+        self.textbrowser_one_sentence.setText(sentence)
 
     def generate_all(self):
-        initial_sentences = []
-        # Load the sentences
-        with open(self.lineedit_input_file.text(), 'r', encoding='utf-8') as input_file:
-            initial_sentences = input_file.read().split('\n')
-
-        if not initial_sentences:
-            print('WARNING: no sentences retrieved from the input file')
-            return
+        self.markold.import_sentences(self.lineedit_input_file.text())
 
         markov = self.spinbox_markov.value()
         min_word_length = self.spinbox_min_words.value()
@@ -155,17 +154,13 @@ class Ui_MainWindow(object):
             print('WARNING: sentence number must be an int')
             return
 
-        sentences = multi_markov.examples_to_sentences(initial_sentences, markov=markov, number_to_generate=number,
-                                                      min_word_length=min_word_length, max_word_length=max_word_length)
-                                        
         output_file = self.lineedit_output_file.text()
 
         if not output_file:
             output_file = 'data.txt'
 
-        with open(output_file, 'a', encoding='utf8') as of:
-            for sentence in sentences:
-                of.write(sentence + '\n')
+        self.markold.generate_multiple_sentences(markov, number, min_word_length=min_word_length, 
+                                                 max_word_length=max_word_length, to_output=output_file)
 
 
 if __name__ == "__main__":
