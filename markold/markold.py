@@ -10,11 +10,14 @@ class Markold:
     def import_sentences(self, file):
         self.sentences = []
         self.saved_matrixes = {}
-        with open(file, 'r', encoding='utf-8') as input_file:
-            self.sentences = input_file.read().split('\n')
+        if isinstance(file, list):
+            self.sentences = file
+        else:
+            with open(file, 'r', encoding='utf-8') as input_file:
+                self.sentences = input_file.read().split('\n')
 
     def beautify(self, sentences):
-        """ Reformats sentences by adding a space before and after punctuation 
+        """ Reformats sentences by adding a space before and after punctuation
             (to treat them as regular sentence parts). """
 
         translator = str.maketrans({key: " {0} ".format(key) for key in ','})
@@ -55,7 +58,7 @@ class Markold:
                 for i, _ in enumerate(words):
                     if i < len(words) - nb + 1:
                         n_words_set.add(self.get_key(words, i, nb))
-        
+
         return n_words_set
 
     def compute_word_occurence(self, sentences, word_order, n):
@@ -194,12 +197,12 @@ class Markold:
         iteration = 0
 
         while iteration <= max_word_length or 'END' not in next_word_proba.keys():
-            
+
             #BUG: Sometimes, the algorithm get stuck in an infinite loop between 2 words
             if iteration > max_word_length * 2:
                 print(f'WARNING: endless loop between two words, invalid sentence (ditched)')
                 return ''
-                
+
 
             # BUG: shouldn't happen (but it did)
             try:
@@ -214,11 +217,11 @@ class Markold:
             # If we have reached the maximum number of words allowed and we can end here, do it
             if iteration > max_word_length and any(x[0] == 'END' for x in next_word_proba_lst):
                 break
-            
+
             # Else, pick a random one
             else:
                 random_choice = rn.random()
-                
+
                 choice = self.return_selected(random_choice, next_word_proba_lst)
 
             # If we chose that this is the end of the sentence
@@ -226,7 +229,7 @@ class Markold:
                 # If we reached the minimal number of words in the sentence, we're done
                 if iteration >= min_word_length:
                     break
-                
+
                 else:
                     # Else, check if there are other possibilities than END
                     removed_end_cumulative = [x for x in next_word_proba_lst if x[0] != 'END']
@@ -259,7 +262,7 @@ class Markold:
 
         for x in range(n):
             print(f'Generating sentence {x}...', end=' ')
-            generated_sentences.append(self.reformate_sentence(self.generate_sentence(markov, min_word_length=min_word_length, 
+            generated_sentences.append(self.reformate_sentence(self.generate_sentence(markov, min_word_length=min_word_length,
                                                                                       max_word_length=max_word_length)))
             print(f'sentence generated.')
 
