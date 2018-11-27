@@ -1,5 +1,8 @@
 *.pyc
 *.txt
 
+markold.egg-info/
+build/
+dist/
 input_files/
 output_files/
